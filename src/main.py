@@ -1,5 +1,8 @@
 import discord
 from discord.ext import commands
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 intents = discord.Intents.default()
 intents.members = True
@@ -19,4 +22,4 @@ async def reload(ctx: commands.Context):
     if ctx.message.author.id == 272646759229161473:
         await bot.reload_extension('osusume_poster')
 
-bot.run("NDE4NDEwMTU4Mjg1MjU4NzYy.GqSSSv.KNuz2iSaKblAbJB33fCOzoM1iO81-01JE83SMw")
+bot.run(os.getenv("DISCORD_TOKEN"))
