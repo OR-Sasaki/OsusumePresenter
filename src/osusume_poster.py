@@ -46,7 +46,7 @@ class OsusumePoster(commands.Cog):
 
         for in_channel_id in self.in_channel_ids:
             in_channel = self.bot.get_channel(in_channel_id)
-            messages = [message async for message in in_channel.history(limit=30)]
+            messages = [message async for message in in_channel.history(limit=None)]
             if len(messages) == 0:
                 continue
             choiced_message = None
