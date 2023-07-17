@@ -12,10 +12,12 @@ class OsusumePoster(commands.Cog):
         self.out_channel_id = 0
     
     def cog_unload(self):
+        print("cog_unload")
         self.printer.cancel()
 
     @commands.command()
     async def link(self, ctx, set_type):
+        print("link")
         # text channelしか登録できない
         if type(ctx.channel) is not discord.channel.TextChannel or ctx.channel.id in self.in_channel_ids:
             return
@@ -27,16 +29,19 @@ class OsusumePoster(commands.Cog):
 
     @commands.command()
     async def unlink(self, ctx, set_type):
+        print("unlink")
         if set_type == "in" and ctx.channel.id in self.in_channel_ids:
             self.in_channel_ids.remove(ctx.channel.id)
         elif set_type == "out":
             self.out_channel_id = 0
     
     async def print_message(self):
+        print("print_message")
         out_channel = self.bot.get_channel(self.out_channel_id)
         
         if out_channel == None:
             return
+        message="**本日のおすすめ**\n"
         embed = discord.Embed(title="本日のおすすめ",color=0xff0000)
 
         for in_channel_id in self.in_channel_ids:
@@ -53,17 +58,22 @@ class OsusumePoster(commands.Cog):
                     await out_channel.send("Invalid messages")
                     return
 
+            message += "【" + in_channel.name + "】\n"
+            message += choiced_message.content + "\n\n"
             embed.add_field(name=in_channel.name, value=choiced_message.content)
 
-        await out_channel.send(embed=embed)
+        await out_channel.send(message.rstrip())
 
     @commands.command()
     async def do_put(self, ctx):
+        print("do_put")
         await self.print_message()
 
     @tasks.loop(hours=24)
     async def printer(self):
+        print("printer")
         await self.print_message()
 
 async def setup(bot):
+    print("setup")
     await bot.add_cog(OsusumePoster(bot))
